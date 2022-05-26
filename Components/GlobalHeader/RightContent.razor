@@ -1,0 +1,91 @@
+﻿@inherits AntDomComponentBase
+@using AntDesign.ProLayout
+<Space Class="@ClassMapper.Class" Size="@("24")">
+    @*    <SpaceItem>
+        <HeaderSearch Class="action search"
+        Placeholder="Site Search"
+        DefaultValue="umi ui"
+        Options="DefaultOptions" />
+        </SpaceItem>
+    <SpaceItem>
+        <AntDesign.Tooltip Title="@("Help")" Placement="@Placement.Bottom">
+            <Unbound>
+                <span @ref="@context.Current" class="action">
+                    <Icon Type="question-circle" Theme="outline" />
+                </span>
+            </Unbound>
+        </AntDesign.Tooltip>
+    </SpaceItem>*@
+    <SpaceItem> 
+        <Space Align="center">
+            <SpaceItem>
+                <NoticeIcon ClearText="Empty"
+                            ViewMoreText="see more"
+                            Count="_count"
+                            OnClear="HandleClear"
+                            OnViewMore="HandleViewMore">
+                    <NoticeList TabKey="notification"
+                                Title="Notifications"
+                                EmptyText="You have viewed all notifications"
+                                ShowViewMore
+                                Data="_notifications" />
+                    <NoticeList TabKey="message"
+                                Title="Messages"
+                                EmptyText="You have read all messages"
+                                ShowViewMore
+                                Data="_messages" />
+                    <NoticeList TabKey="event"
+                                Title="Upcoming"
+                                EmptyText="You have completed all to do"
+                                ShowViewMore
+                                Data="_events" />
+                </NoticeIcon>
+            </SpaceItem>
+            <SpaceItem>
+                &nbsp;
+            </SpaceItem>
+            
+            <AuthorizeView>
+            <Authorized>
+                <SpaceItem>
+                <div style="padding-left:10px;">
+                    <Dropdown>
+                        <Overlay>
+                            <Menu>
+                                <MenuItem>
+                                    <a @onclick="() => handleProfileDropdown('1')"><Icon Type="User" Theme="outline" />&nbsp;Profile</a>
+                                </MenuItem>
+                                <MenuItem>
+                                    <a @onclick="() => handleProfileDropdown('2')"><Icon Type="Logout" Theme="outline" />&nbsp;Logout</a>
+                                </MenuItem>
+                            </Menu>
+                        </Overlay>
+                        <ChildContent>
+                            <a class="ant-dropdown-link" @onclick:preventDefault>
+                                @context.User.Identity.Name &nbsp;<Icon Type="down" />
+                            </a>
+                        </ChildContent>
+                    </Dropdown>
+                </div> 
+            </SpaceItem>
+            </Authorized>
+            </AuthorizeView>
+
+
+        </Space>
+    </SpaceItem>
+    @*    <SpaceItem>
+        <AuthorizeView>
+        <NotAuthorized>
+        <Button type="link">
+        <Icon Type="user" Theme="outline" />
+        <span>Login</span>
+        </Button>
+        </NotAuthorized>
+        </AuthorizeView>
+        </SpaceItem>*@
+
+    <SpaceItem>
+        <SelectLang />
+    </SpaceItem>
+</Space>

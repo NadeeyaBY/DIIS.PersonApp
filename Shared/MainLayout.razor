@@ -1,0 +1,74 @@
+﻿@inherits LayoutComponentBase
+@using AntDesign.ProLayout
+@using DIIS.PersonApp.Components.GlobalHeader
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject IPSUOAuth2Services OAuth2Services
+@inject IJSRuntime JSRuntime
+
+<PageTitle>DIISBoilerplate</PageTitle>
+<AuthorizeView>
+    <Authorized>
+        <BasicLayout Logo="@("https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg")"
+                     MenuData="_menuData">
+            <RightContentRender>
+                <RightContent />
+            </RightContentRender>
+            <ChildContent>
+                @Body
+            </ChildContent>
+            <FooterRender>
+                <FooterView Copyright="DIIS PSU" Links="@Links"></FooterView>
+            </FooterRender>
+        </BasicLayout>
+    </Authorized>
+    <NotAuthorized>
+        <FrontPage />
+        <FooterView Copyright="DIIS PSU" Links="@Links"></FooterView>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+<SettingDrawer />
+
+@code {
+    [CascadingParameter] public Task<AuthenticationState> AuthenticationState { get; set; }
+
+    private MenuDataItem[]? _menuData = { };
+
+    //[Inject]
+    //public HttpClient HttpClient { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _menuData = await HttpClient.GetFromJsonAsync<MenuDataItem[]>("data/menu.json");
+       // await JSRuntime.InitializeInactivityTimer(DotNetObjectReference.Create(this));
+    }
+
+    public LinkItem[] Links { get; set; } =
+         {
+        new LinkItem
+        {
+        Key = "DIISWeb",
+        Title = "DIIS",
+        Href = "https://diis.psu.ac.th",
+        BlankTarget = true,
+        }
+    };
+
+    //[JSInvokable]
+    //public async Task Logout()
+    //{
+    //    var authState = await AuthenticationState;
+    //    if (!authState.User.Identity.IsAuthenticated)
+    //    {
+    //        await OAuth2Services.SignOut();
+    //        NavigationManager.NavigateTo("/User/Logout", true);
+    //    }
+    //    else
+    //    {
+            
+    //    }
+    //}
+}

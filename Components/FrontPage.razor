@@ -1,0 +1,27 @@
+@inherits AntDomComponentBase
+<div style="text-align:center">
+    <Row Align="middle">
+        <Col Xs="new EmbeddedProperty{ Order= 2, Span=24 }"
+             Md="new EmbeddedProperty{ Order= 1, Span=8 }">
+        <Title Level="1">Boilerplate</Title>
+        <Title Level="3">กรุณา Login ด้วย PSU Passport</Title>
+        <div class="login-button-wrapper">
+            <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.Login" Block Shape="@ButtonShape.Round" @onclick="(() => SignIn())"> Login</Button>
+        </div>
+        </Col>
+        <Col Xs="new EmbeddedProperty{ Order= 1, Span=24 }"
+             Md="new EmbeddedProperty{ Order= 2, Span=16 }">
+        <Image Class="front-img" Width="60%" Src="https://psu1-2.psu.ac.th/Images/national.svg" Preview="false" />
+        </Col>
+    </Row>
+</div>
+<style>
+    .login-button-wrapper {
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+
+    .front-img {
+        margin-top: 30px;
+    }
+</style>

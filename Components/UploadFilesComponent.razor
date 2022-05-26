@@ -1,0 +1,372 @@
+﻿@using System
+@using System.IO
+@using DIIS.PersonApp.Settings
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Configuration
+@using Microsoft.Extensions.Logging
+@using Microsoft.Extensions.Options
+@inject IWebHostEnvironment webHostEnvironment
+@inject ILogger<UploadFilesComponent> Logger
+@inject IOptions<FileUploadSetting> _FileUploadSetting
+@inject MessageService messageService
+@inject ModalService modalService
+
+<Card>
+    <TitleTemplate>
+        <Text Style="margin-bottom: 0;" Strong>@Title</Text>
+    </TitleTemplate>
+    <Extra>
+        <Button @ref="btnUploadSave" Type="@ButtonType.Primary" OnClick="SaveFiles">
+            <Icon Type="save" Theme="outline" /> Save
+        </Button>
+    </Extra>
+    <Body>
+        <Content Class="diisUploadContainer">
+            <Space Direction="DirectionVHType.Vertical" Align="center" Style="justify-content: center; padding-block: 2rem; width: 100%;">
+                <SpaceItem>
+                    <Icon Type="inbox" style="color:#1890ff;" Height="48" Width="48" />
+                </SpaceItem>
+                <SpaceItem>
+                    <Title Level="4" Strong Style="text-align:center;">Click or drag file to this area to upload.</Title>
+                </SpaceItem>
+                <SpaceItem Style="margin-bottom: 0 !important;">
+                    <Text Type="secondary" Style="margin-bottom: 0;">คลิกหรือลากไฟล์มาวางเพื่ออัปโหลด</Text>
+                </SpaceItem>
+            </Space>
+            <InputFile OnChange="LoadFiles" multiple style="position: absolute; opacity: 0; width:100%; height:100%; cursor: pointer;" />
+        </Content>
+
+        @if (isLoading)
+        {
+            <Divider />
+            <Text><Icon Type="loading" Theme="outline" /> Uploading...</Text>
+        }
+        else
+        {
+            @if (LoadedFiles.Count > 0)
+            {
+                <Divider />
+                <Space Direction="DirectionVHType.Vertical" Style="width: 100%;" Size="@("8")">
+                    @foreach (var file in LoadedFiles)
+                    {
+                        <SpaceItem>
+                            <Card Size="small" Class="diisUploadedCard" Style="width: 100%;">
+                                <Space Style="diplay:flex !important; justify-content:space-between; width: 100%;">
+                                    <SpaceItem>
+                                        <Space Align="center" Size="@("8")" Wrap>
+                                            <SpaceItem>
+                                                <Text>@file.Name</Text>
+                                            </SpaceItem>
+                                            <SpaceItem>
+                                                <Text Type="secondary">@ConvertFileSize(file.Size)</Text>
+                                            </SpaceItem>
+                                        </Space>
+                                    </SpaceItem>
+                                    <SpaceItem>
+                                        <Tooltip Title="@("remove")">
+                                            <Button Danger Type="@ButtonType.Link" OnClick="()=>RemoveFile(file)">
+                                                <Icon Type="delete" Theme="outline" />
+                                            </Button>
+                                        </Tooltip>
+                                    </SpaceItem>
+                                </Space>
+                            </Card>
+                        </SpaceItem>
+                    }
+                </Space>
+            }
+        }
+    </Body>
+</Card>
+
+@code {
+
+    /// <summary>
+    /// สำหรับกำหนดประเภทไฟล์ที่อนุญาตให้ upload
+    /// </summary>
+    [Parameter]
+    public List<string> FileTypes { get; set; } = new List<string>() { ".jpeg", ".jpg", ".png" };
+
+    /// <summary>
+    /// สำหรับกำหนดจำนวนไฟล์สูงสุดที่อนุญาตให้ upload
+    /// </summary>
+    [Parameter]
+    public int MaxAllowedFiles { get; set; } = 1;
+
+    /// <summary>
+    /// EventCallback
+    /// </summary>
+    [Parameter]
+    public EventCallback<InputFileChangeEventArgs> OnUploadValidate { get; set; }
+
+    /// <summary>
+    /// EventCallback
+    /// </summary>
+    [Parameter]
+    public EventCallback<string> OnUploadSaved { get; set; }
+
+    /// <summary>
+    /// Title text
+    /// </summary>
+    [Parameter]
+    public string Title { get; set; } = "Upload";
+
+    /// <summary>
+    /// ขนาดไฟล์สูงสุด (MB)
+    /// อ่านจาก AppSettings
+    /// </summary>
+    public long MaxFileSize { get; set; }
+
+    /// <summary>
+    /// DirToSave
+    /// </summary>
+    public string? DirToSave { get; set; }
+
+    /// <summary>
+    /// list of upload file
+    /// </summary>
+    public List<IBrowserFile> LoadedFiles = new();
+
+    private bool isLoading;
+    Button? btnUploadSave;
+
+    protected override async Task OnInitializedAsync()
+    {
+        LoadedFiles = new();
+
+        await base.OnInitializedAsync();
+    }
+
+    public async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        isLoading = true;
+
+        try
+        {
+            foreach (var file in e.GetMultipleFiles(MaxAllowedFiles))
+            {
+                //ตรวจสอบจำนวนไฟล์
+                if (LoadedFiles.Count < MaxAllowedFiles)
+                {
+                    string FilePathTemp = _FileUploadSetting.Value.FilePathTemp ?? throw new ArgumentNullException(nameof(FilePathTemp)); ;
+
+                    MaxFileSize = _FileUploadSetting.Value.FileMaxSize * (1024 * 1024);
+
+                    try
+                    {
+                        if (file.Size > MaxFileSize)
+                        {
+                            isLoading = false;
+
+                            modalService.Error(new ConfirmOptions()
+                                {
+                                    Title = "Your file's too big",
+                                    Content = "ขนาดไฟล์เกินกำหนด กรุณาอัพโหลดไฟล์ที่น้อยกว่า " + ConvertFileSize(MaxFileSize)
+                                });
+
+                            return;
+                        }
+
+                        var trustedFileNameForFileStorage = file.Name;
+                        var path = Path.Combine(FilePathTemp, trustedFileNameForFileStorage);
+                        string extension = Path.GetExtension(path);
+
+                        //ตรวจสอบประเภทไฟล์
+                        if (ValidateExtension(extension))
+                        {
+                            //create temp file
+                            var dirFiles = new DirectoryInfo(FilePathTemp);
+                            if (!dirFiles.Exists)
+                            {
+                                dirFiles.Create();
+                            }
+
+                            await using FileStream fs = new(path, FileMode.Create);
+                            await file.OpenReadStream(MaxFileSize).CopyToAsync(fs);
+
+                            LoadedFiles.Add(file);
+                        }
+                        else
+                        {
+                            modalService.Error(new ConfirmOptions()
+                                {
+                                    Title = "File format incorrect",
+                                    Content = "ประเภทไฟล์ไม่ถูกต้อง (" + file.Name + ")"
+                                });
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        modalService.Error(new ConfirmOptions()
+                            {
+                                Title = file.Name,
+                                Content = ex.Message
+                            });
+                    }
+                    finally
+                    {
+                        isLoading = false;
+                    }
+                }
+                else
+                {
+                    isLoading = false;
+
+                    modalService.Error(new ConfirmOptions()
+                        {
+                            Title = "Too many files",
+                            Content = "อัพโหลดไฟล์เกินจำนวนที่กำหนด (" + MaxAllowedFiles.ToString() + " ไฟล์)"
+                        });
+
+                    return;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            isLoading = false;
+
+            if (ex.Message.Contains("maximum"))
+            {
+                modalService.Error(new ConfirmOptions()
+                    {
+                        Title = "Too many files",
+                        Content = "อัพโหลดไฟล์เกินจำนวนที่กำหนด (" + MaxAllowedFiles.ToString() + " ไฟล์)"
+                    });
+            }
+            else
+            {
+                modalService.Error(new ConfirmOptions()
+                    {
+                        Title = "Something went wrong",
+                        Content = "เกิดข้อผิดพลาด (" + ex.Message + ")"
+                    });
+            }
+        }
+    }
+
+    /// <summary>
+    /// ตรวจสอบประเภทไฟล์
+    /// </summary>
+    /// <param name="extension">ประเภทไฟล์ (รวม .) เช่น .doc, .docx</param>
+    /// <returns>bool</returns>
+    private bool ValidateExtension(string extension)
+    {
+        foreach (var item in FileTypes)
+        {
+            if (extension.Equals(item.ToLower()))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private void RemoveFile(IBrowserFile file)
+    {
+        if (LoadedFiles != null)
+        {
+            LoadedFiles.Remove(file);
+        }
+    }
+
+    private async Task SaveFiles()
+    {
+        try
+        {
+            if (OnUploadSaved.HasDelegate)
+            {
+                await OnUploadSaved.InvokeAsync("A message from child component...");
+            }
+            else
+            {
+                foreach (var file in LoadedFiles)
+                {
+                    var guid = Guid.NewGuid().ToString();
+
+                    ////Save to Server
+                    ////Setting Folder in WebRootPath.
+                    //dirToSave = Path.Combine(webHostEnvironment.WebRootPath, "UploadFiles");
+                    ////Setting Folder in Private or Public.
+                    //dirToSave = _FileUploadSetting.Value.FilePathPublic + "\\" + "UploadFiles";
+                    DirToSave = _FileUploadSetting.Value.FilePathPrivate + "\\" + guid.Substring(0, 2);
+
+                    var di = new DirectoryInfo(DirToSave);
+                    if (!di.Exists)
+                    {
+                        di.Create();
+                    }
+
+                    var fileName = guid + Path.GetExtension(file.Name);
+                    var filePath = Path.Combine(DirToSave, fileName);
+
+                    await using FileStream fs = new(filePath, FileMode.Create);
+                    await file.OpenReadStream(MaxFileSize).CopyToAsync(fs);
+
+                    //save to Database
+                }
+
+                //display success
+                modalService.Success(new ConfirmOptions()
+                    {
+                        Title = "Upload Success",
+                        Content = "อัปโหลดไฟล์สำเร็จ"
+                    });
+
+            }
+        }
+        catch (System.Exception ex)
+        {
+            modalService.Error(new ConfirmOptions()
+                {
+                    Title = "Something went wrong",
+                    Content = "เกิดข้อผิดพลาด (" + ex.Message + ")"
+                });
+        }
+
+    }
+
+    /// <summary>
+    /// แปลงขนาดของไฟล์ byte เป็น string และ หน่วย
+    /// </summary>
+    /// <param name="fileSize">ขนาดของไฟล์</param>
+    /// <returns>string</returns>
+    public string ConvertFileSize(long fileSize)
+    {
+        var units = new[] { "B", "KB", "MB", "GB", "TB" };
+        var index = 0;
+        double size = fileSize;
+        while (size > 1024)
+        {
+            size /= 1024;
+            index++;
+        }
+        return string.Format("{0:0.00} {1}", size, units[index]);
+    }
+}
+
+<style>
+    .diisUploadContainer {
+        position: relative;
+        display: grid;
+        place-content: center;
+        border: 1px dashed #e8e8e8;
+        background-color: #fafafa;
+        width: 100%;
+        border-radius: .25rem;
+        transition: 200ms ease-in-out;
+    }
+
+        .diisUploadContainer:hover {
+            border: 1px dashed #1890ff;
+        }
+
+    .diisUploadedCard {
+        transition: 200ms ease-in-out;
+    }
+
+        .diisUploadedCard:hover {
+            border: 1px solid #1890ff;
+        }
+</style>

@@ -1,0 +1,70 @@
+﻿@page "/Example/UploadSample"
+
+@inject IWebHostEnvironment webHostEnvironment
+@inject ModalService modalService
+<Row Justify="center">
+    <Col Xl="10" Lg="14" Md="18" Sm="20" Xs="24" Style="padding-inline:1rem;">
+    <Title Level="4">Default</Title>
+    <UploadFilesComponent @ref="uploadFilesComponent1" FileTypes="_filetypes" MaxAllowedFiles="3" />
+    <Divider />
+    <Title Level="4">Custom Save Files</Title>
+    <UploadFilesComponent @ref="uploadFilesComponent2" FileTypes="_filetypes" MaxAllowedFiles="3" OnUploadSaved="CustomSaveFiles"></UploadFilesComponent>
+       </Col>
+</Row>
+@code {
+
+    List<string> _filetypes = new List<string>() { ".jpeg", ".jpg", ".png", ".pdf" };
+    UploadFilesComponent uploadFilesComponent1;
+    UploadFilesComponent uploadFilesComponent2;
+
+    protected override async Task OnInitializedAsync()
+    {
+
+    }
+    private async Task CustomSaveFiles()
+    {
+
+        try
+        {
+            foreach (var file in uploadFilesComponent2.LoadedFiles)
+            {
+                var guid = Guid.NewGuid().ToString();
+
+                //save to Server
+                //Private or Public Folder
+                //var dirToSave =  _FileUploadSetting.Value.FilePathPrivate+ "\\" + guid.Substring(0, 2);
+
+                uploadFilesComponent2.DirToSave = Path.Combine(webHostEnvironment.WebRootPath, "UploadFiles");
+                var di = new DirectoryInfo(uploadFilesComponent2.DirToSave);
+                if (!di.Exists)
+                {
+                    di.Create();
+                }
+
+                var fileName = guid + Path.GetExtension(file.Name);
+                var filePath = Path.Combine(uploadFilesComponent2.DirToSave, fileName);
+
+                await using FileStream fs = new(filePath, FileMode.Create);
+                await file.OpenReadStream(uploadFilesComponent2.MaxFileSize).CopyToAsync(fs);
+
+                //save to Database
+
+
+            }
+            //display success
+            modalService.Success(new ConfirmOptions()
+                {
+                    Title = "Info",
+                    Content = "Upload Success"
+                });
+        }
+        catch (System.Exception ex)
+        {
+            modalService.Error(new ConfirmOptions()
+                {
+                    Title = "This is an error message",
+                    Content = "เกิดข้อผิดพลาด (" + ex.Message + ")"
+                });
+        }
+    }
+}

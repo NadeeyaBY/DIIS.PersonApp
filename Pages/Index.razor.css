@@ -1,0 +1,8 @@
+﻿body {
+}
+
+::deep .space-align-container {
+    display: flex;
+    align-item: flex-start;
+    flex-wrap: wrap;
+}

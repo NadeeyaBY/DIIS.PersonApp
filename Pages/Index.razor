@@ -1,0 +1,172 @@
+﻿@page "/"
+<div>
+    <Card >
+         
+        <TitleTemplate>
+                    <Text Strong>ข่าวประกาศ</Text>       
+        </TitleTemplate>
+        <Body>
+            <BadgeRibbon Text="วันที่ประกาศ (11/11/2011)">   
+            <Card>
+                <TitleTemplate>
+                    <div class="space-align-container">
+                          <Space Align="baseline">
+                             <SpaceItem>
+                                 <Text Strong>หัวข้อข่าวประกาศ</Text>
+                             </SpaceItem>
+                             <SpaceItem>
+                             <Tag PresetColor="@PresetColor.Blue">ใหม่</Tag>
+                             </SpaceItem>
+                          </Space>
+                    </div>
+               </TitleTemplate>      
+               <Body>
+                     <p>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
+                          probare, quae sunt a te dicta? Refert tamen, quo modo.
+                    </p>
+                    <Paragraph Copyable>Simple copyable text</Paragraph>
+                    @*<DatePicker @bind-Value="date" CultureInfo="cultureInfo" />*@ 
+                </Body>
+            </Card>
+            </BadgeRibbon>
+            <BadgeRibbon Text="วันที่ประกาศ (11/11/2011)">
+            <Card Style="margin-top: 16px">
+                  <TitleTemplate>
+                    <div class="space-align-container">
+                          <Space Align="baseline">
+                             <SpaceItem>
+                                 <Text Strong>หัวข้อข่าวประกาศ</Text>
+                             </SpaceItem>
+                             <SpaceItem>
+                             <Tag PresetColor="@PresetColor.Blue">ใหม่</Tag>
+                             </SpaceItem>
+                          </Space>
+                    </div>
+                    
+                   
+                </TitleTemplate>
+                <Body>
+                     <p>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed nonne merninisti licere mihi ista
+                          probare, quae sunt a te dicta? Refert tamen, quo modo.
+                    </p>
+                    <Paragraph Copyable>Simple copyable text</Paragraph>
+                </Body>
+            </Card>
+            </BadgeRibbon>
+             <div class="text-center">             
+            <Pagination Size="small" Total="50" Style="margin-top:10px" />
+            </div>
+        </Body>
+        
+        
+    </Card>
+
+    <Card  Style="margin-top: 16px;">
+        <TitleTemplate >
+                <Text Strong>ข่าวประกาศ</Text>
+        </TitleTemplate >
+        <Body>
+               <Empty Description="false" />
+       </Body>
+    </Card>
+</div>
+
+<div class="mt-4">
+ 
+    <div class="mt-2">
+        <Divider Orientation="left" Style="font-weight:bold"><Icon Type="read" Theme="outline" Style="font-size:25px;margin-right:8px"/>กระดานข่าว</Divider>
+    </div>
+    <Card>
+        <CardTabs>
+            <Tabs DefaultActiveKey="1">
+                <ChildContent>
+                    <TabPane Key="1">
+                        <TabTemplate>Tab1</TabTemplate>
+                        <ChildContent>
+                             
+                            <Card Class="tab-card">
+                                <TitleTemplate >
+                                     <Text Strong Class="title-card">หัวข้อ</Text>
+                                </TitleTemplate >
+                                <Extra><a slot="extra"><Icon Type="clock-circle" Theme="outline" Style="font-size:20px;margin-right:5px"/>วันที่ประกาศ (11/11/2011)</a>  </Extra>
+                            </Card>
+                            <Card Class="tab-card-bottom">                   
+                                    เนื้อหาประกาศ
+                            </Card>
+                             
+                            <Card Class="tab-card">
+                                <TitleTemplate >
+                                     <Text Strong Class="title-card">หัวข้อ</Text>
+                                </TitleTemplate >
+                                <Extra><a slot="extra"><Icon Type="clock-circle" Theme="outline" Style="font-size:20px;margin-right:5px"/>วันที่ประกาศ (11/11/2011)</a>  </Extra>
+                            </Card>
+                            <Card Class="tab-card-bottom">                   
+                                    เนื้อหาประกาศ
+                             </Card>
+                            
+                            </ChildContent>
+                            
+                    </TabPane>
+                    <TabPane Key="2">
+                        <TabTemplate>Tab2</TabTemplate>
+                        <ChildContent>
+                            <div class="m-1">
+                            <Card Title=@("หัวข้อ") Class="section-card">
+                                <Extra><a slot="extra"><Icon Type="clock-circle" Theme="outline" Style="font-size:20px;margin-right:5px"/>วันที่ประกาศ (11/11/2011)</a>  </Extra>
+                                <Body>                   
+                                    เนื้อหาประกาศ
+                                </Body>
+                              
+                            </Card>
+                             </div>   
+                             <div class="m-1">   
+                            <Card Title=@("หัวข้อ")>
+                                <Extra><a slot="extra"><Icon Type="clock-circle" Theme="outline" Style="font-size:20px;margin-right:5px"/>วันที่ประกาศ (11/11/2011)</a>  </Extra>
+                                <Body>                   
+                                    เนื้อหาประกาศ
+                                </Body>
+                              
+                            </Card>
+                            </div>
+                            </ChildContent>
+                    </TabPane>
+                    <TabPane Key="3">
+                        <TabTemplate>Tab3</TabTemplate>
+                        <ChildContent>
+                            <div class="m-1">
+                            <Card Title=@("หัวข้อ")>
+                                <Extra><a slot="extra"><Icon Type="clock-circle" Theme="outline" Style="font-size:20px;margin-right:5px"/>วันที่ประกาศ (11/11/2011)</a>  </Extra>
+                                <Body>                   
+                                    เนื้อหาประกาศ
+                                </Body>
+                              
+                            </Card>
+                             </div>   
+                             <div class="m-1">   
+                            <Card Title=@("หัวข้อ")>
+                                <Extra><a slot="extra"><Icon Type="clock-circle" Theme="outline" Style="font-size:20px;margin-right:5px"/>วันที่ประกาศ (11/11/2011)</a>  </Extra>
+                                <Body>                   
+                                    เนื้อหาประกาศ
+                                </Body>
+                              
+                            </Card>
+                            </div>
+                        </ChildContent>
+                    </TabPane>
+                </ChildContent>
+            </Tabs>
+            
+        </CardTabs>
+        
+    </Card>
+</div>
+
+
+@code{
+    DateTime date = DateTime.Now;
+    System.Globalization.CultureInfo cultureInfo = new System.Globalization.CultureInfo("en-US");
+}
+
+  

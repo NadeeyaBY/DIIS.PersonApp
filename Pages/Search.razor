@@ -1,0 +1,112 @@
+﻿@page "/search"
+@using DIIS.PersonApp.Entities;
+@inject MessageService message;
+
+<h3>Search</h3>
+<Space Direction="DirectionVHType.Vertical" Size="@("large")">
+    <SpaceItem>
+        <AutoComplete Options="@options">
+            <AutoCompleteSearch Placeholder="input here" AllowClear WrapperStyle="width: 200px;"
+                                EnterButton="true" @bind-Value="@txtValue" OnSearch="OnSearch" />
+        </AutoComplete>
+        @*<Search Placeholder="input search text" AllowClear WrapperStyle="width: 200px;"
+            EnterButton="true" @bind-Value="@txtValue" OnSearch="OnSearch" />
+        *@
+        <Button Type="primary" OnClick="@(()=>{ visible = true; })">
+            Add a row
+        </Button>
+    </SpaceItem>
+</Space>
+
+<GenericList List="listOfData">
+    <WholeListTemplate>
+        <Table DataSource="listOfData" PageSize="5" TItem="DevSample" RowClassName="@(_=>" editable-row")" Bordered TableLayout="fixed">
+            <ChildContent Context="data">
+                <AntDesign.Column TData="decimal" Title="ID" @bind-Field="@data.Id" Filterable Sortable>
+                    @data.Id
+                </AntDesign.Column>
+                <AntDesign.Column TData="string" Title="Name" @bind-Field="@data.CustFirstName" Filterable Sortable>
+                    @if (!editCache[data.Id].edit)
+                    {
+                        @data.CustFirstName
+                    }
+                    else
+                    {
+                        <Input @bind-Value="editCache[data.Id].data.CustFirstName" />
+                    }
+                </AntDesign.Column>
+                <AntDesign.Column TData="string" Title="LastName">
+                    @if (!editCache[data.Id].edit)
+                    {
+                        @data.CustLastName
+                    }
+                    else
+                    {
+                        <Input @bind-Value="editCache[data.Id].data.CustLastName" />
+                    }
+                </AntDesign.Column>
+                <AntDesign.Column TData="DateTime?" Title="BirthDate" Sortable @bind-Field="@data.BirthDate">
+                    @if (!editCache[data.Id].edit)
+                    {
+                        @data.BirthDate
+                    }
+                    else
+                    {
+                        <AntDesign.DatePicker TValue="DateTime?" Format="dd/MM/yyyy" @bind-Value="editCache[data.Id].data.BirthDate"></AntDesign.DatePicker>
+                    }
+                </AntDesign.Column>
+                <ActionColumn Title="Action">
+                    <Space Size=@("middle")>
+                        <SpaceItem>
+                            @if (!editCache[data.Id].edit)
+                            {
+                                <a @onclick="() => startEdit(data.Id)">Edit</a>
+                            }
+                            else
+                            {
+                                <a @onclick="() => saveEdit(data.Id)" class="save">Save</a>
+                                <Popconfirm Title="Sure to cancel?"
+                                        OnConfirm="() => cancelEdit(data.Id)"
+                                        OkText="Yes"
+                                        CancelText="No">
+                                    <a>Cancel</a>
+                                </Popconfirm>
+                            }
+                        </SpaceItem>
+                        <SpaceItem>
+                            <Popconfirm Title="Sure to delete?"
+                                        OnConfirm="()=> deleteRow(data.Id)"
+                                        OkText="Yes"
+                                        CancelText="No">
+                                <a>Delete</a>
+                            </Popconfirm>
+                        </SpaceItem>
+                    </Space>
+                </ActionColumn>
+            </ChildContent>
+        </Table>
+    </WholeListTemplate>
+</GenericList>
+
+
+<Modal Title="@title"
+       Visible="@visible"
+       OnOk="@HandleOk"
+       OnCancel="@HandleCancel">
+
+    <Form Model="tempInsert">
+        <FormItem Label="Name">
+            <Input Id="txtName" @bind-Value="@context.CustFirstName" />
+        </FormItem>
+        <FormItem Label="LastName">
+            <Input Id="txtSName" @bind-Value="@context.CustLastName" />
+        </FormItem>
+        <FormItem Label="BirthDate">
+            <AntDesign.DatePicker TValue="DateTime?" Format="dd/MM/yyyy" @bind-Value="context.BirthDate" />
+        </FormItem>
+    </Form>
+</Modal>
+
+@code {
+
+}

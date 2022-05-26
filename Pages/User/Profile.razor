@@ -1,0 +1,20 @@
+﻿@page "/user/profile"
+<AntDesign.ProLayout.PageContainer Title="Profile">
+    <Breadcrumb>
+        <Breadcrumb>
+            <BreadcrumbItem>Home</BreadcrumbItem>
+            <BreadcrumbItem>User</BreadcrumbItem>
+            <BreadcrumbItem>Profile </BreadcrumbItem>
+        </Breadcrumb>
+    </Breadcrumb>
+    <ChildContent>
+        <Card>
+            <Descriptions Title="User Info" Style="margin-bottom: 32px;">
+                <DescriptionsItem Title="Username">@UserName</DescriptionsItem>
+                <DescriptionsItem Title="Name (Thai)">@NameThai</DescriptionsItem>
+                <DescriptionsItem Title="Name (English)">@NameEng</DescriptionsItem>
+                <DescriptionsItem Title="Email">@Email</DescriptionsItem>
+            </Descriptions>
+        </Card>
+    </ChildContent>
+</AntDesign.ProLayout.PageContainer>

@@ -1,0 +1,29 @@
+﻿[
+  {
+    "path": "/",
+    "name": "Home",
+    "key": "home",
+    "icon": "home"
+  },
+  {
+    "path": "/search",
+    "name": "Search",
+    "key": "search",
+    "icon": "search"
+  },
+  {
+    "path": "/people",
+    "name": "people",
+    "key": "people",
+    "icon": "user"
+
+  },
+
+
+  {
+    "path": "/Example/UploadSample",
+    "name": "Upload",
+    "key": "Upload",
+    "icon": "Upload"
+  }
+]
