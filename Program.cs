@@ -24,6 +24,7 @@ builder.Services.Configure<FileUploadSetting>(builder.Configuration.GetSection("
 builder.Services.AddHttpClient<IPSUOAuth2Services, PSUOAuth2Services>();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPersonService, PersonServiceInMemory>();
 builder.Services.AddScoped<IDevSampleService, DevSampleService>();
 builder.Services.AddDbContext<ModelContext>(options =>
 {
