@@ -1,0 +1,76 @@
+﻿@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager 
+@inject MessageService MessageService
+
+<h1>Person</h1>
+   @*<input type="checkbox" @bind="displayButtons" />*@
+   <GenericList List="People">
+       <ElementTemplate Context="person">
+           <IndividualPerson Person="person" DisplayButtons="displayButtons" DeletePerson="DeletePerson" EditPerson="EditPerson "/>
+       </ElementTemplate>
+   </GenericList>
+
+   <GenericList List="People">
+    <WholeListTemplate>
+        <Table TItem="Person"
+               DataSource="People">
+            <Column @bind-Field="@context.PersonId" Sortable />
+            <Column @bind-Field="@context.FirstName"  Sortable />
+            <Column @bind-Field="@context.LastName" Sortable />
+            <Column @bind-Field="@context.BirthDate"Format="yyyy-MM-dd" Sortable/>
+            
+            <ActionColumn>
+                <Space>
+                    <SpaceItem><Button OnClick="()=>EditPerson(context)" Type="@ButtonType.Primary" Icon="@IconType.Outline.Edit"> Edit </Button></SpaceItem>
+                </Space>
+                <Space>
+                    <SpaceItem>
+                        
+                     <Popconfirm Title="Are you sure delete this task?" 
+                        OnConfirm="()=>DeletePerson(context)" 
+                        OnCancel="Cancel"
+                        OkText="Yes"
+                        CancelText="No">
+                        <a> <Button Danger  Icon="@IconType.Outline.Close">Delete </Button></a>
+                     </Popconfirm>
+                   </SpaceItem>
+                </Space>
+            </ActionColumn>
+        </Table>
+    </WholeListTemplate>
+</GenericList>
+
+  
+    
+
+@code {
+    [Parameter] public List<Person> People{ get; set; }
+
+
+    private bool displayButtons = true;
+
+    protected async Task DeletePerson(Person person)
+    {
+        ////var confirmed = await JSRuntime.InvokeAsync<bool>("confirm", $"Are you sure to delete {person.FirstName} ?");
+        //var confirmed = await JSRuntime.Confirm($"Are you sure to delete {person.FirstName} ?");
+
+
+        //if(confirmed)
+        //{
+        //  People.Remove(person); 
+        //}
+          People.Remove(person); 
+         await MessageService.Info("ลบแล้วค้าาาา!!");
+
+    }
+    protected async Task EditPerson(Person person)
+    {
+         NavigationManager.NavigateTo($"/people/edit/{person.PersonId}");
+         
+    }
+     private void Cancel()
+    {
+        MessageService.Error("ยังไม่ได้ลบค้าาา !!!");
+    }
+     
+}

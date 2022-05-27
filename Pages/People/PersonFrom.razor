@@ -1,0 +1,54 @@
+﻿@inject NavigationManager NavigationManager
+
+<Form Model="Person"
+      LabelColSpan="8"
+      WrapperColSpan="16">
+    <FormItem Label="PersonId">
+        <Input @bind-Value="@context.PersonId" />
+    </FormItem>
+    <FormItem Label="FirstName">
+        <Input @bind-Value="@context.FirstName" />
+    </FormItem>
+    <FormItem Label="LastName">
+        <Input @bind-Value="@context.LastName" />
+    </FormItem>
+    <FormItem Label="BirthDate">
+        <DatePicker @bind-Value="@context.BirthDate" Format="yyyy/MM/dd" />
+
+    </FormItem>
+
+
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" HtmlType="submit">
+            Submit
+        </Button>
+    </FormItem>
+    <FormItem WrapperColOffset="8" WrapperColSpan="16">
+        <Button Type="@ButtonType.Primary" Icon="@IconType.Outline.CloseCircle">Cancel</Button>
+    </FormItem>
+</Form>
+
+@*<EditForm Model="Person" OnValidSubmit="OnValidSubmit">
+    <DataAnnotationsValidator />
+    PersonId:<InputText @bind-Value="Person.PersonId"></InputText> <br />
+            <ValidationMessage For="(()=>Person.PersonId)"/>
+
+    FirstName:<InputText @bind-Value="Person.FirstName"></InputText> <br />
+    LastName:<InputText @bind-Value="Person.LastName"></InputText> <br />
+    BirthDate:<InputDate @bind-Value="Person.BirthDate"></InputDate> <br />
+    <button type="submit">Save</button>
+     <button @onclick="Cancel">Cancel</button>
+</EditForm>*@
+
+
+
+
+
+@code {
+    [Parameter] public Person Person { get; set; }
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+    protected void Cancel()
+    {
+        NavigationManager.NavigateTo("/people");
+    }
+}

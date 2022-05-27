@@ -1,0 +1,18 @@
+﻿@page "/people/create"
+
+<h3>CreatePerson</h3>
+<Title Level="3">Create Person</Title>
+
+ <Divider />
+<PersonFrom Person="person"/>
+
+
+@code {
+    private Entities.Person person = new Entities.Person();
+    protected async Task InsertPerson()
+    {
+        
+    }
+
+
+}

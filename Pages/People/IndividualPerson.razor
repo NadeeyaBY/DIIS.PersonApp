@@ -1,0 +1,22 @@
+﻿<p>PersonId : @Person.PersonId </p>
+<p>Firstname : @((MarkupString)Person.FirstName) </p>
+<p>Lastname : @((MarkupString)Person.LastName) </p>
+<p>Birthdate : @Person.BirthDate </p>
+@if (DisplayButtons)
+{
+    <button @onclick="@(()=>DeletePerson.InvokeAsync(Person))" >Delete</button>
+    <button @onclick="@(()=>EditPerson.InvokeAsync(Person))" >Edit</button>
+   
+}
+
+<hr />
+
+@code 
+{
+    [Parameter] public Entities.Person Person { get; set; }
+    [Parameter] public bool DisplayButtons { get; set; } = false;
+    [Parameter] public EventCallback<Entities.Person> DeletePerson { get; set; }
+    [Parameter] public EventCallback<Entities.Person> EditPerson { get; set; }
+   
+
+}

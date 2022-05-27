@@ -1,0 +1,28 @@
+﻿@page "/people/edit/{PersonId}"
+@inject IPersonService PersonService
+
+
+<h3>EditPerson</h3>
+<Title Level="3">Edit Person</Title>
+ <Divider />
+ <PersonFrom Person="person" OnValidSubmit="UpdatePerson"/>
+@*  @PersonId*@
+
+@code {
+    [Parameter]public string PersonId { get; set; }
+
+
+    private Person person = new Person();
+    protected override void OnInitialized()
+    {
+        if (PersonId != null)
+        {
+            person = PersonService.GetPersonById(PersonId);
+        }
+    }
+    public async Task UpdatePerson()
+    {
+            await PersonService.UpdatePerson(person);
+    }
+
+}
