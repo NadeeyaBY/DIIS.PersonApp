@@ -1,5 +1,7 @@
 using AntDesign.ProLayout;
+using Blazored.Toast;
 using DIIS.PersonApp.Entities;
+using DIIS.PersonApp.EntitiesLINQ;
 using DIIS.PersonApp.IServices;
 using DIIS.PersonApp.Services;
 using DIIS.PersonApp.Settings;
@@ -26,7 +28,13 @@ builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPersonService, PersonServiceInMemory>();
 builder.Services.AddScoped<IDevSampleService, DevSampleService>();
+builder.Services.AddBlazoredToast();
 builder.Services.AddDbContext<ModelContext>(options =>
+{
+    options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection"));
+
+});
+builder.Services.AddDbContext<LinqModelContext>(options =>
 {
     options.UseOracle(builder.Configuration.GetConnectionString("DefaultConnection"));
 

@@ -1,0 +1,82 @@
+﻿<h3>Excercise2</h3>
+@page "/exercise2"
+
+@using DIIS.PersonApp.EntitiesLINQ
+
+@using System.ComponentModel
+
+@attribute [Authorize]
+
+@inject MessageService MessageService;
+@inject LinqModelContext dbContext;
+
+<style>
+
+        table {
+
+            font-family: arial, sans-serif;
+
+            border-collapse: collapse;
+
+            width: 100%;
+
+        }
+
+        td, th {
+
+            border: 1px solid #dddddd;
+
+            text-align: left;
+
+            padding: 8px;
+
+        }
+
+        tr:nth-child(even) {
+
+            background-color: #dddddd;
+
+        }
+
+</style>
+
+<Card>
+
+    <GenericList List="DataList1">
+
+        <WholeListTemplate>
+
+            <Table DataSource="DataList1" PageSize="5" TItem="Fish">
+
+                <Column Title="ID" @bind-Field="@context.Id" Filterable Sortable />
+
+                <Column Title="Name" @bind-Field="@context.Name" />
+
+                <Column Title="PriceUnit" @bind-Field="@context.PriceUnit" Filterable Sortable />
+
+                <Column Title="ExpiredDate" @bind-Field="@context.ExpiredDate" Format="dd MMMM yyyy" Filterable Sortable />
+
+            </Table>
+
+        </WholeListTemplate>
+
+    </GenericList>
+
+</Card>
+
+@code {
+
+
+    public List<Fish> DataList1 = new List<Fish>();
+
+
+
+    protected override async Task OnInitializedAsync()
+
+    {
+        //LinqModelContext dbContext = new LinqModelContext();
+        DataList1 = dbContext.Fish.ToList();
+        //DataList1 = await LinqExerciseService.SearchData();
+
+    }
+}

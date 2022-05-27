@@ -18,7 +18,13 @@
     "icon": "user"
 
   },
+  {
+    "path": "/exercise2",
+    "name": "fish",
+    "key": "fish",
+    "icon": "fish"
 
+  },
 
   {
     "path": "/Example/UploadSample",

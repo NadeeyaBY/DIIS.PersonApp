@@ -1,4 +1,12 @@
 ﻿@page "/"
+@using Blazored.Toast
+@using Blazored.Toast.Services
+@inject IToastService toastService
+
+
+<button  @onclick="@(() => toastService.ShowInfo("I'm an INFO message"))">Wellcom</button>
+
+
 <div>
     <Card >
          

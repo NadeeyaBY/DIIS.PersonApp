@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32519.379
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DIIS.PersonApp", "DIIS.PersonApp.csproj", "{D85A0341-6013-4186-8C41-7C1877FB49BC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DIIS.PersonApp", "DIIS.PersonApp.csproj", "{D85A0341-6013-4186-8C41-7C1877FB49BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,51 @@
+﻿{
+   "CodeGenerationMode": 2,
+   "ContextClassName": "LinqModelContext",
+   "ContextNamespace": null,
+   "DefaultDacpacSchema": null,
+   "FilterSchemas": false,
+   "IncludeConnectionString": false,
+   "ModelNamespace": null,
+   "OutputContextPath": "",
+   "OutputPath": "EntitiesLINQ",
+   "ProjectRootNamespace": "DIIS.PersonApp",
+   "Schemas": null,
+   "SelectedHandlebarsLanguage": 0,
+   "SelectedToBeGenerated": 0,
+   "Tables": [
+      {
+         "Name": "DEVDEMO.CATEGORIES",
+         "ObjectType": 0
+      },
+      {
+         "Name": "DEVDEMO.PRODUCTS",
+         "ObjectType": 0
+      },
+      {
+         "Name": "DEVDEMO.SUPPLIERS",
+         "ObjectType": 0
+      },
+      {
+         "Name": "DEVDEMO.FISH",
+         "ObjectType": 0
+      }
+   ],
+   "UiHint": "Connect",
+   "UseBoolPropertiesWithoutDefaultSql": false,
+   "UseDatabaseNames": false,
+   "UseDbContextSplitting": false,
+   "UseFluentApiOnly": false,
+   "UseHandleBars": false,
+   "UseHierarchyId": false,
+   "UseInflector": false,
+   "UseLegacyPluralizer": false,
+   "UseManyToManyEntity": false,
+   "UseNoConstructor": false,
+   "UseNoDefaultConstructor": false,
+   "UseNoNavigations": false,
+   "UseNoObjectFilter": false,
+   "UseNodaTime": false,
+   "UseNullableReferences": false,
+   "UseSchemaFolders": false,
+   "UseSpatial": false
+}
